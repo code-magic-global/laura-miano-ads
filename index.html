@@ -12,13 +12,14 @@
   header h1 { color: #fff; font-size: 17px; font-weight: 500; letter-spacing: 0.01em; }
   header p { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 2px; }
 
-  .top-bar { background: #fff; border-bottom: 0.5px solid #dddbd3; padding: 0.75rem 2rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .top-bar { background: #fff; border-bottom: 0.5px solid #dddbd3; padding: 0.75rem 2rem; display: flex; flex-direction: column; gap: 0; }
+  .top-bar-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .top-bar-row + .top-bar-row { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 0.5px solid #eeecea; }
   .top-bar label { font-size: 13px; color: #7a7265; white-space: nowrap; }
   .top-bar input[type="date"] { font-size: 13px; padding: 5px 10px; border: 0.5px solid #c8c6bf; border-radius: 6px; background: #faf9f7; color: #1a1a18; cursor: pointer; }
   .top-bar input[type="date"]:focus { outline: 2px solid #3d5a4c; outline-offset: 1px; }
 
-  .range-group { display: flex; align-items: center; gap: 0.75rem; }
-  .range-group.compare { padding-left: 0.75rem; border-left: 0.5px solid #dddbd3; }
+  .range-group { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
   .range-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
   .range-label.primary { background: rgba(61,90,76,0.1); color: #3d5a4c; }
   .range-label.secondary { background: rgba(90,110,138,0.1); color: #5a6e8a; }
@@ -68,7 +69,6 @@
   @media (max-width: 640px) {
     header, .top-bar, .main { padding-left: 1rem; padding-right: 1rem; }
     .quick-ranges { margin-left: 0; }
-    .range-group.compare { padding-left: 0; border-left: none; border-top: 0.5px solid #dddbd3; padding-top: 0.75rem; width: 100%; }
   }
 </style>
 </head>
@@ -83,33 +83,35 @@
 </header>
 
 <div class="top-bar">
-  <div class="range-group">
-    <span class="range-label primary">Period A</span>
-    <label for="date-from">From</label>
-    <input type="date" id="date-from">
-    <label for="date-to">To</label>
-    <input type="date" id="date-to">
+  <div class="top-bar-row">
+    <div class="range-group">
+      <span class="range-label primary">Period A</span>
+      <label for="date-from">From</label>
+      <input type="date" id="date-from">
+      <label for="date-to">To</label>
+      <input type="date" id="date-to">
+    </div>
+    <label class="compare-toggle" id="compare-toggle" onclick="toggleCompare()">
+      <input type="checkbox" id="compare-checkbox" onclick="event.stopPropagation()"> Compare
+    </label>
+    <button class="apply-btn" id="load-btn" onclick="loadData()">Load data</button>
+    <div class="quick-ranges">
+      <button class="quick-btn" onclick="setRange(7, this)">7d</button>
+      <button class="quick-btn active" onclick="setRange(30, this)">30d</button>
+      <button class="quick-btn" onclick="setRange(60, this)">60d</button>
+      <button class="quick-btn" onclick="setRange(90, this)">90d</button>
+    </div>
   </div>
 
-  <div class="range-group compare" id="compare-group" style="display:none;">
-    <span class="range-label secondary">Period B</span>
-    <label for="date-from-b">From</label>
-    <input type="date" id="date-from-b">
-    <label for="date-to-b">To</label>
-    <input type="date" id="date-to-b">
-  </div>
-
-  <label class="compare-toggle" id="compare-toggle" onclick="toggleCompare()">
-    <input type="checkbox" id="compare-checkbox" onclick="event.stopPropagation()"> Compare
-  </label>
-
-  <button class="apply-btn" id="load-btn" onclick="loadData()">Load data</button>
-
-  <div class="quick-ranges">
-    <button class="quick-btn" onclick="setRange(7, this)">7d</button>
-    <button class="quick-btn active" onclick="setRange(30, this)">30d</button>
-    <button class="quick-btn" onclick="setRange(60, this)">60d</button>
-    <button class="quick-btn" onclick="setRange(90, this)">90d</button>
+  <div class="top-bar-row" id="compare-group" style="display:none;">
+    <div class="range-group">
+      <span class="range-label secondary">Period B</span>
+      <label for="date-from-b">From</label>
+      <input type="date" id="date-from-b">
+      <label for="date-to-b">To</label>
+      <input type="date" id="date-to-b">
+      <span style="font-size:12px; color:#9a9790;">— edit dates then click Load data</span>
+    </div>
   </div>
 </div>
 
