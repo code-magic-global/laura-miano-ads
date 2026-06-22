@@ -91,9 +91,9 @@
       <label for="date-to">To</label>
       <input type="date" id="date-to" onchange="if(comparing) fillPeriodB()">
     </div>
-    <label class="compare-toggle" id="compare-toggle" onclick="toggleCompare()">
-      <input type="checkbox" id="compare-checkbox" onclick="event.stopPropagation()"> Compare
-    </label>
+    <button class="compare-toggle" id="compare-toggle" onclick="toggleCompare()">
+      <span id="compare-tick" style="font-size:14px;">☐</span> Compare
+    </button>
     <button class="apply-btn" id="load-btn" onclick="loadData()">Load data</button>
     <div class="quick-ranges">
       <button class="quick-btn" onclick="setRange(7, this)">7d</button>
@@ -190,7 +190,7 @@ function fillPeriodB() {
 
 function toggleCompare() {
   comparing = !comparing;
-  document.getElementById('compare-checkbox').checked = comparing;
+  document.getElementById('compare-tick').textContent = comparing ? '☑' : '☐';
   document.getElementById('compare-toggle').classList.toggle('active', comparing);
   document.getElementById('compare-group').style.display = comparing ? 'flex' : 'none';
   if (comparing) fillPeriodB();
