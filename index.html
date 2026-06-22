@@ -87,9 +87,9 @@
     <div class="range-group">
       <span class="range-label primary">Period A</span>
       <label for="date-from">From</label>
-      <input type="date" id="date-from">
+      <input type="date" id="date-from" onchange="if(comparing) fillPeriodB()">
       <label for="date-to">To</label>
-      <input type="date" id="date-to">
+      <input type="date" id="date-to" onchange="if(comparing) fillPeriodB()">
     </div>
     <label class="compare-toggle" id="compare-toggle" onclick="toggleCompare()">
       <input type="checkbox" id="compare-checkbox" onclick="event.stopPropagation()"> Compare
@@ -175,11 +175,25 @@ let comparing = false;
 
 function fmtInput(d) { return d.toISOString().slice(0, 10); }
 
+function fillPeriodB() {
+  const fromStr = document.getElementById('date-from').value;
+  const toStr   = document.getElementById('date-to').value;
+  if (!fromStr || !toStr) return;
+  const fromA = new Date(fromStr);
+  const toA   = new Date(toStr);
+  const days  = Math.round((toA - fromA) / (1000 * 60 * 60 * 24)) + 1;
+  const toBp   = new Date(fromA); toBp.setDate(toBp.getDate() - 1);
+  const fromBp = new Date(toBp);  fromBp.setDate(fromBp.getDate() - (days - 1));
+  document.getElementById('date-to-b').value   = fmtInput(toBp);
+  document.getElementById('date-from-b').value = fmtInput(fromBp);
+}
+
 function toggleCompare() {
   comparing = !comparing;
   document.getElementById('compare-checkbox').checked = comparing;
   document.getElementById('compare-toggle').classList.toggle('active', comparing);
   document.getElementById('compare-group').style.display = comparing ? 'flex' : 'none';
+  if (comparing) fillPeriodB();
   loadData();
 }
 
@@ -190,12 +204,7 @@ function setRange(days, btn) {
   from.setDate(from.getDate() - days);
   document.getElementById('date-to').value   = fmtInput(to);
   document.getElementById('date-from').value = fmtInput(from);
-  if (comparing) {
-    const toBp = new Date(from); toBp.setDate(toBp.getDate() - 1);
-    const fromBp = new Date(toBp); fromBp.setDate(fromBp.getDate() - days);
-    document.getElementById('date-to-b').value   = fmtInput(toBp);
-    document.getElementById('date-from-b').value = fmtInput(fromBp);
-  }
+  if (comparing) fillPeriodB();
   loadData();
 }
 
